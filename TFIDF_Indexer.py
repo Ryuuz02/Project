@@ -1,9 +1,11 @@
+# Imports
 from bs4 import BeautifulSoup
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
 import os
+from sklearn.metrics.pairwise import cosine_similarity
 
-# Step 1: Parse HTML Files
+# Parse HTML Files
 html_files = os.listdir('html_docs/')
 text_data = []
 
@@ -13,16 +15,12 @@ for file in html_files:
         text = soup.get_text()
         text_data.append(text)
 
-# Step 2: Preprocess Text
-# Perform text preprocessing (tokenization, stopwords removal, etc.)
-
-# Step 3: Construct TF-IDF Matrix
+# Construct TF-IDF Matrix
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(text_data)
 terms = vectorizer.get_feature_names_out()
 
-# Step 4: Save TF-IDF Matrix and Terms
-# Note: You may choose to save these for later use
+# Save TF-IDF Matrix and Terms
 with open('tfidf_matrix.pickle', 'wb') as f:
     pickle.dump(X, f)
 
@@ -37,11 +35,14 @@ with open('vectorizer.pickle', 'wb') as f:
 # print(terms[20278]) <- This will give you the term at index 20278 (which happens to be sweetspot in our example)
 # print(X[0, 20278]) <- This will give you the TF-IDF value of the term "sweetspot" in the first document
 
-from sklearn.metrics.pairwise import cosine_similarity
-term1 = "tibbers"
-term2 = "stun"
+term1 = "tibbers" # Change these terms to the ones you want to compare
+term2 = "stun" # Change these terms to the ones you want to compare
 
-# Suppose 'term1' and 'term2' are the two terms for which you want to compute cosine similarity
+# Can also use the inputs below to ask the user for the terms
+# term1 = input("Enter the first term: ")
+# term2 = input("Enter the second term: ")
+
+# Get the indices of the terms in the TF-IDF matrix
 term1_index = vectorizer.vocabulary_[term1]
 term2_index = vectorizer.vocabulary_[term2]
 
@@ -52,4 +53,5 @@ tfidf_vector_term2 = X[:, term2_index].reshape(1, -1)  # Reshape to row vector
 # Compute cosine similarity between the TF-IDF vectors
 cosine_sim = cosine_similarity(tfidf_vector_term1, tfidf_vector_term2)
 
+# Print the cosine similarity
 print("The cosine similarity between " + term1 + " and " + term2 + " is: " + str(cosine_sim[0][0]))
