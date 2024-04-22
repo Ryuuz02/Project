@@ -42,7 +42,7 @@ class BasicSpider(scrapy.Spider):
         # Write the HTML file
         filename = Path(folder_name) / f"champion-{page}.html"
         Path(filename).write_bytes(response.body)
-        # Follows linked pages. NOTE IN THE IMPLEMENTATION THIS IS USED IN, THIS DOES NOT ACCOMPLISH ANYTHING AS THE PAGES WOULD JUST LINK BACK TO THEMSELVES. THIS IS FOR MODULARITY
+        # Follows linked pages. NOTE IN THE IMPLEMENTATION THIS IS USED IN (Being https://leagueoflegends.fandom.com/wiki/List_of_champions), THIS DOES NOT ACCOMPLISH ANYTHING AS THE PAGES WOULD JUST LINK BACK TO THEMSELVES. THIS IS FOR MODULARITY
         secondary_pages = response.css("div.floatleft a::attr(href)").getall()
         for next_page in secondary_pages:
             if (next_page is not None) and (self.max_depth == -1 or (response.meta["depth"] < self.max_depth)) and (self.max_pages == -1 or (self.pages < self.max_pages)):

@@ -1,7 +1,6 @@
 # Imports
 from flask import Flask, request, jsonify
 from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
 import pickle
 
 # Create a Flask app
